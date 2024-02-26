@@ -33,8 +33,8 @@ def convert_text_to_embeddings_vectors(text_chunks):
 
 def main_chat_chain():
     prompt_template = """
-    Answer the question as detailed as possible from the provided context, make sure to provide all the details, if the answer is not in
-    provided context just say, "answer is not available in the context", don't provide the wrong answer\n\n
+    Provide a detailed response based on the given context.
+    If the information is not available in the provided context, clearly state, 'answer is not available in the context' without providing inaccurate information.\n\n
     Context:\n {context}?\n
     Question: \n{question}\n
 
