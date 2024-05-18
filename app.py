@@ -35,17 +35,20 @@ def convert_text_to_embeddings_vectors(text_chunks):
 
 def main_chat_chain():
     prompt_template = """
-    Provide a detailed response based on the given context.
-    If the information is not available in the provided context, clearly state, 'answer is not available in the context' without providing inaccurate information.\n\n
-    Context:\n {context}?\n
-    Question: \n{question}\n
-
-    Answer:"""
+    You are an AI assistant with access to the contents of a PDF document. Your task is to answer the question based on the provided context.
+    
+    Context: {context}
+    
+    Question: {question}
+    
+    Answer in a clear and concise manner. If the answer is not present in the context, reply with "The answer is not available in the provided context."
+    """
+    
     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
-
+    
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
-
+    
     return chain
 
 async def user_input(user_question):
