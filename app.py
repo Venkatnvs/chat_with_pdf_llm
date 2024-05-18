@@ -9,6 +9,7 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 import logging
+import asyncio
 
 load_dotenv()
 
@@ -47,14 +48,14 @@ def main_chat_chain():
 
     return chain
 
-def user_input(user_question):
+async def user_input(user_question):
     try:
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
         docs = new_db.similarity_search(user_question)
         chain = main_chat_chain()
 
-        response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+        response = await asyncio.to_thread(chain, {"input_documents": docs, "question": user_question}, return_only_outputs=True)
         st.write("Reply:")
         st.write(response["output_text"])
     except Exception as e:
@@ -68,7 +69,7 @@ def main():
     user_question = st.text_input("Ask a Question from the PDF Files")
 
     if user_question:
-        user_input(user_question)
+        asyncio.run(user_input(user_question))
 
     with st.sidebar:
         st.title("Menu:")
